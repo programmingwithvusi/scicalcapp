@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════╗
+  ║  SciCalcApp — Chapter 5: A Menu-Driven App to Monitor   ║
+  ║               Important Indicators                      ║
+  ║  Adds: main menu, system monitor, experiment log,       ║
+  ║        about screen, back navigation                    ║
+  ╚══════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval';
+                   style-src 'self' 'unsafe-inline';
+                   script-src 'self' 'unsafe-inline' 'unsafe-eval';
+                   media-src *; img-src 'self' data: content:;">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport"
+          content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+    <link rel="stylesheet" href="css/index.css">
+    <title>SciCalcApp</title>
+</head>
+<body>
+
+    <!-- ─────────────────────────────────────────────────────────
+         CHAPTER 1 — Splash Screen (carried forward)
+         ───────────────────────────────────────────────────────── -->
+    <div id="splash-screen">
+        <div class="splash-inner">
+            <div class="splash-icon">⚗️</div>
+            <h1 class="splash-title">SciCalcApp</h1>
+            <p class="splash-sub">For Engineers &amp; Scientists</p>
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to device…</p>
+                <p class="event received">Device is ready ✓</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────
+         APP CONTAINER
+         ───────────────────────────────────────────────────────── -->
+    <div id="app-container" class="hidden">
+
+        <!-- Dynamic header — title and back button change per screen -->
+        <header class="app-header">
+            <button id="header-back" class="header-back hidden"
+                    onclick="app.goBack()">←</button>
+            <span class="header-icon" id="header-icon">⚗️</span>
+            <span class="header-title" id="header-title">SciCalcApp</span>
+            <span class="header-badge">Ch 5</span>
+        </header>
+
+        <main id="app-main">
+
+            <!-- ═════════════════════════════════════════════════
+                 CHAPTER 5 — Main Menu
+                 Top-level navigation. Each button leads to a
+                 section. Chapter 5's core pattern: menu → section
+                 → sub-menu → indicator.
+                 ═════════════════════════════════════════════════ -->
+            <div id="screen-menu" class="screen">
+                <div class="menu-grid">
+
+                    <button class="menu-card"
+                            onclick="app.showScreen('calc')">
+                        <span class="menu-card-icon">🔬</span>
+                        <span class="menu-card-label">Calculator</span>
+                        <span class="menu-card-desc">E=mc² · KE · Heat</span>
+                    </button>
+
+                    <button class="menu-card"
+                            onclick="app.showScreen('monitor')">
+                        <span class="menu-card-icon">📊</span>
+                        <span class="menu-card-label">System Monitor</span>
+                        <span class="menu-card-desc">Battery · Network · Device</span>
+                    </button>
+
+                    <button class="menu-card"
+                            onclick="app.showScreen('log')">
+                        <span class="menu-card-icon">📋</span>
+                        <span class="menu-card-label">Experiment Log</span>
+                        <span class="menu-card-desc">Saved calculations</span>
+                    </button>
+
+                    <button class="menu-card"
+                            onclick="app.showScreen('about')">
+                        <span class="menu-card-icon">ℹ️</span>
+                        <span class="menu-card-label">About</span>
+                        <span class="menu-card-desc">Chapter timeline</span>
+                    </button>
+
+                </div>
+            </div>
+
+            <!-- ═════════════════════════════════════════════════
+                 CALCULATOR (Chapters 3 & 4 — carried forward)
+                 Sub-menu selects the formula; panels are the
+                 same input + result cards from Ch 3 & 4.
+                 ═════════════════════════════════════════════════ -->
+            <div id="screen-calc" class="screen hidden">
+
+                <!-- Ch 3: tab bar re-used as sub-menu -->
+                <nav class="tab-bar">
+                    <button class="tab active" id="tab-me"
+                            onclick="app.switchTab('me')">E = mc²</button>
+                    <button class="tab" id="tab-ke"
+                            onclick="app.switchTab('ke')">KE = ½mv²</button>
+                    <button class="tab" id="tab-ht"
+                            onclick="app.switchTab('ht')">Q = mcΔT</button>
+                </nav>
+
+                <!-- E = mc² panel -->
+                <div id="panel-me" class="calc-panel">
+                    <div class="formula-header">
+                        <span class="formula-text">E = mc²</span>
+                        <span class="formula-desc">Mass-energy equivalence · Einstein</span>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="me-mass">
+                            Mass <span class="field-unit">(kg)</span>
+                        </label>
+                        <input class="field-input" type="number" id="me-mass"
+                               placeholder="e.g. 0.001" min="0" step="any"
+                               oninput="app.clearError('me')"
+                               onblur="app.saveInput('me')">
+                        <p class="field-hint">Even tiny masses release enormous energy.</p>
+                    </div>
+                    <div id="me-error" class="error-msg hidden"></div>
+                    <div class="btn-row">
+                        <button class="btn primary" onclick="app.calculate('me')">Calculate</button>
+                        <button class="btn ghost"   onclick="app.resetForm('me')">Reset</button>
+                    </div>
+                    <div id="me-result" class="result-box hidden">
+                        <div class="result-header">
+                            <span class="result-title">Result</span>
+                            <span id="me-result-inputs" class="result-inputs"></span>
+                        </div>
+                        <div class="result-rows">
+                            <div class="result-row">
+                                <span class="result-label">Joules (J)</span>
+                                <span class="result-value" id="me-joules">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Calories (cal)</span>
+                                <span class="result-value" id="me-calories">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Kilowatt-hours (kWh)</span>
+                                <span class="result-value" id="me-kwh">—</span>
+                            </div>
+                        </div>
+                        <button class="save-btn" onclick="app.saveToLog('me')">
+                            💾 Save to Experiment Log
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KE = ½mv² panel -->
+                <div id="panel-ke" class="calc-panel hidden">
+                    <div class="formula-header">
+                        <span class="formula-text">KE = ½mv²</span>
+                        <span class="formula-desc">Kinetic energy of a moving object</span>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="ke-mass">
+                            Mass <span class="field-unit">(kg)</span>
+                        </label>
+                        <input class="field-input" type="number" id="ke-mass"
+                               placeholder="e.g. 5" min="0" step="any"
+                               oninput="app.clearError('ke')"
+                               onblur="app.saveInput('ke')">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="ke-vel">
+                            Velocity <span class="field-unit">(m/s)</span>
+                        </label>
+                        <input class="field-input" type="number" id="ke-vel"
+                               placeholder="e.g. 10" min="0" max="3000" step="any"
+                               oninput="app.syncSliderFromInput()"
+                               onblur="app.saveInput('ke')">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">
+                            Velocity slider
+                            <span class="field-unit">
+                                0–3 000 m/s &nbsp;|&nbsp;
+                                <span id="ke-slider-val">0</span> m/s
+                            </span>
+                        </label>
+                        <input class="field-slider" type="range"
+                               id="ke-slider" min="0" max="3000" value="0" step="1"
+                               oninput="app.syncInputFromSlider()">
+                        <div class="slider-labels">
+                            <span>0</span><span>750</span><span>1 500</span>
+                            <span>2 250</span><span>3 000</span>
+                        </div>
+                    </div>
+                    <div id="ke-error" class="error-msg hidden"></div>
+                    <div class="btn-row">
+                        <button class="btn primary" onclick="app.calculate('ke')">Calculate</button>
+                        <button class="btn ghost"   onclick="app.resetForm('ke')">Reset</button>
+                    </div>
+                    <div id="ke-result" class="result-box hidden">
+                        <div class="result-header">
+                            <span class="result-title">Result</span>
+                            <span id="ke-result-inputs" class="result-inputs"></span>
+                        </div>
+                        <div class="result-rows">
+                            <div class="result-row">
+                                <span class="result-label">Joules (J)</span>
+                                <span class="result-value" id="ke-joules">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Kilojoules (kJ)</span>
+                                <span class="result-value" id="ke-kj">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Watt-hours (Wh)</span>
+                                <span class="result-value" id="ke-wh">—</span>
+                            </div>
+                        </div>
+                        <button class="save-btn" onclick="app.saveToLog('ke')">
+                            💾 Save to Experiment Log
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q = mcΔT panel -->
+                <div id="panel-ht" class="calc-panel hidden">
+                    <div class="formula-header">
+                        <span class="formula-text">Q = mcΔT</span>
+                        <span class="formula-desc">Heat energy · thermodynamics</span>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="ht-mass">
+                            Mass <span class="field-unit">(kg)</span>
+                        </label>
+                        <input class="field-input" type="number" id="ht-mass"
+                               placeholder="e.g. 2" min="0" step="any"
+                               oninput="app.clearError('ht')"
+                               onblur="app.saveInput('ht')">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="ht-material">
+                            Material <span class="field-unit">(sets c automatically)</span>
+                        </label>
+                        <select class="field-select" id="ht-material"
+                                onchange="app.onMaterialChange()">
+                            <option value="">— select or enter c manually —</option>
+                            <option value="4186">Water — 4 186 J/kg·K</option>
+                            <option value="900">Aluminium — 900 J/kg·K</option>
+                            <option value="490">Steel — 490 J/kg·K</option>
+                            <option value="385">Copper — 385 J/kg·K</option>
+                            <option value="1005">Air — 1 005 J/kg·K</option>
+                            <option value="840">Glass — 840 J/kg·K</option>
+                            <option value="2090">Ice — 2 090 J/kg·K</option>
+                            <option value="custom">Custom value…</option>
+                        </select>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="ht-cp">
+                            Specific heat c <span class="field-unit">(J/kg·K)</span>
+                        </label>
+                        <input class="field-input" type="number" id="ht-cp"
+                               placeholder="e.g. 4186" min="0" step="any"
+                               oninput="app.clearError('ht'); app.onManualCpEntry()"
+                               onblur="app.saveInput('ht')">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="ht-dt">
+                            Temperature change ΔT
+                            <span class="field-unit">(K or °C)</span>
+                        </label>
+                        <input class="field-input" type="number" id="ht-dt"
+                               placeholder="e.g. 20" step="any"
+                               oninput="app.clearError('ht')"
+                               onblur="app.saveInput('ht')">
+                        <p class="field-hint">Negative = cooling, positive = heating.</p>
+                    </div>
+                    <div id="ht-error" class="error-msg hidden"></div>
+                    <div class="btn-row">
+                        <button class="btn primary" onclick="app.calculate('ht')">Calculate</button>
+                        <button class="btn ghost"   onclick="app.resetForm('ht')">Reset</button>
+                    </div>
+                    <div id="ht-result" class="result-box hidden">
+                        <div class="result-header">
+                            <span class="result-title">Result</span>
+                            <span id="ht-result-inputs" class="result-inputs"></span>
+                        </div>
+                        <div class="result-rows">
+                            <div class="result-row">
+                                <span class="result-label">Joules (J)</span>
+                                <span class="result-value" id="ht-joules">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Calories (cal)</span>
+                                <span class="result-value" id="ht-cal">—</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="result-label">Kilojoules (kJ)</span>
+                                <span class="result-value" id="ht-kj">—</span>
+                            </div>
+                            <div class="result-row result-row-heat">
+                                <span class="result-label">Direction</span>
+                                <span class="result-value" id="ht-direction">—</span>
+                            </div>
+                        </div>
+                        <button class="save-btn" onclick="app.saveToLog('ht')">
+                            💾 Save to Experiment Log
+                        </button>
+                    </div>
+                </div>
+
+            </div><!-- /#screen-calc -->
+
+            <!-- ═════════════════════════════════════════════════
+                 CHAPTER 5 — System Monitor
+                 Sub-menu: Battery · Network · Device
+                 Each indicator reads live device data via
+                 Cordova plugins (battery-status, network-info).
+                 ═════════════════════════════════════════════════ -->
+            <div id="screen-monitor" class="screen hidden">
+
+                <nav class="tab-bar">
+                    <button class="tab active" id="mon-tab-battery"
+                            onclick="app.switchMonitor('battery')">🔋 Battery</button>
+                    <button class="tab" id="mon-tab-network"
+                            onclick="app.switchMonitor('network')">📶 Network</button>
+                    <button class="tab" id="mon-tab-device"
+                            onclick="app.switchMonitor('device')">📱 Device</button>
+                </nav>
+
+                <!-- Battery indicator -->
+                <div id="monitor-battery" class="monitor-panel">
+                    <div class="indicator-card">
+                        <div class="battery-bar-wrap">
+                            <div id="battery-bar" class="battery-bar" style="width:0%"></div>
+                        </div>
+                        <div class="indicator-row">
+                            <span class="indicator-label">Level</span>
+                            <span class="indicator-value" id="bat-level">—</span>
+                        </div>
+                        <div class="indicator-row">
+                            <span class="indicator-label">Charging</span>
+                            <span class="indicator-value" id="bat-charging">—</span>
+                        </div>
+                        <div class="indicator-row">
+                            <span class="indicator-label">Status</span>
+                            <span class="indicator-value" id="bat-status">—</span>
+                        </div>
+                    </div>
+                    <button class="btn primary" onclick="app.refreshBattery()">
+                        🔄 Refresh
+                    </button>
+                    <p class="monitor-note">
+                        Live updates via <code>cordova-plugin-battery-status</code>.
+                        Install plugin then rebuild for real device data.
+                    </p>
+                </div>
+
+                <!-- Network indicator -->
+                <div id="monitor-network" class="monitor-panel hidden">
+                    <div class="indicator-card">
+                        <div class="indicator-row">
+                            <span class="indicator-label">Connection type</span>
+                            <span class="indicator-value" id="net-type">—</span>
+                        </div>
+                        <div class="indicator-row">
+                            <span class="indicator-label">Online</span>
+                            <span class="indicator-value" id="net-online">—</span>
+                        </div>
+                        <div class="indicator-row">
+                            <span class="indicator-label">navigator.onLine</span>
+                            <span class="indicator-value" id="net-navigator">—</span>
+                        </div>
+                    </div>
+                    <button class="btn primary" onclick="app.refreshNetwork()">
+                        🔄 Refresh
+                    </button>
+                    <p class="monitor-note">
+                        Connection type via <code>cordova-plugin-network-information</code>.
+                        Install plugin then rebuild for full data.
+                    </p>
+                </div>
+
+                <!-- Device indicator -->
+                <div id="monitor-device" class="monitor-panel hidden">
+                    <div class="indicator-card">
+                        <div class="indicator-row">
+                            <span class="indicator-label">Platform</span>
+                            <span class="indicator-value" id="dev-platform">—</span>
+                        </div>
+                        <div class="indicator-row">
+                            <span class="indicator-label">Cordova version</span>
+                            <span class="indicator-value" id="dev-cordova">—</span>
+                        </div>
+                        <div class="indicator-row">
+                            <span class="indicator-label">Screen</span>
+                            <span class="indicator-value" id="dev-screen">—</span>
+                        </div>
+                        <div class="indicator-row">
+                            <span class="indicator-label">Pixel ratio</span>
+                            <span class="indicator-value" id="dev-dpr">—</span>
+                        </div>
+                        <div class="indicator-row">
+                            <span class="indicator-label">Language</span>
+                            <span class="indicator-value" id="dev-lang">—</span>
+                        </div>
+                        <div class="indicator-row">
+                            <span class="indicator-label">User Agent</span>
+                            <span class="indicator-value ua-text" id="dev-ua">—</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /#screen-monitor -->
+
+            <!-- ═════════════════════════════════════════════════
+                 CHAPTER 5 — Experiment Log Viewer
+                 Reads the localStorage array written by Ch 4.
+                 Shows timestamp, formula, inputs, primary result.
+                 ═════════════════════════════════════════════════ -->
+            <div id="screen-log" class="screen hidden">
+                <div class="log-toolbar">
+                    <span id="log-count" class="log-count">0 entries</span>
+                    <button class="btn ghost small" onclick="app.clearLog()">
+                        🗑 Clear All
+                    </button>
+                </div>
+                <div id="log-entries">
+                    <div class="empty-note">
+                        No saved calculations yet.<br>
+                        Run a calculation and tap 💾 Save to Log.
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═════════════════════════════════════════════════
+                 CHAPTER 5 — About
+                 Chapter-by-chapter timeline mapping each chapter
+                 to the feature it contributed to this app.
+                 ═════════════════════════════════════════════════ -->
+            <div id="screen-about" class="screen hidden">
+                <div class="about-card">
+                    <p class="about-intro">
+                        Built chapter-by-chapter following<br>
+                        <em>Building Cross-Platform Mobile &amp; Web Apps<br>
+                        for Engineers and Scientists</em>
+                    </p>
+                    <div class="timeline">
+                        <div class="tl-item">
+                            <div class="tl-badge">Ch 1</div>
+                            <div class="tl-body">
+                                <strong>Introduction</strong>
+                                <p>App shell, splash screen, deviceready event,
+                                   cross-platform overview.</p>
+                            </div>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-badge">Ch 2</div>
+                            <div class="tl-body">
+                                <strong>First App</strong>
+                                <p>Cordova scaffold, config.xml, build pipeline,
+                                   self-test suite, on-screen logger.</p>
+                            </div>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-badge">Ch 3</div>
+                            <div class="tl-body">
+                                <strong>Data Input</strong>
+                                <p>Number inputs, slider, dropdown, input validation,
+                                   localStorage persistence.</p>
+                            </div>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-badge">Ch 4</div>
+                            <div class="tl-body">
+                                <strong>Significant Computing</strong>
+                                <p>E = mc², KE = ½mv², Q = mcΔT.
+                                   Multi-unit output, edge-case handling,
+                                   experiment log entries.</p>
+                            </div>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-badge">Ch 5</div>
+                            <div class="tl-body">
+                                <strong>Menu-Driven Monitor</strong>
+                                <p>Main menu navigation, battery &amp; network
+                                   indicators, experiment log viewer,
+                                   about screen.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div><!-- /#app-container -->
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

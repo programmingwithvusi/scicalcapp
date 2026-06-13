@@ -1,0 +1,128 @@
+<!doctype html>
+<!--
+  ╔══════════════════════════════════════════════════════════╗
+  ║  SciCalcApp — Chapter 2: Developing, Installing          ║
+  ║               and Testing the First App                  ║
+  ║  Adds: build info panel, self-test suite, console log    ║
+  ╚══════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval';
+                   style-src 'self' 'unsafe-inline';
+                   script-src 'self' 'unsafe-inline' 'unsafe-eval';
+                   media-src *; img-src 'self' data: content:;"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta
+      name="viewport"
+      content="initial-scale=1, width=device-width, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="css/index.css" />
+    <title>SciCalcApp</title>
+  </head>
+  <body>
+    <!-- ─────────────────────────────────────────────────────────
+         CHAPTER 1 — Splash Screen (carried forward, unchanged)
+         ───────────────────────────────────────────────────────── -->
+    <div id="splash-screen">
+      <div class="splash-inner">
+        <div class="splash-icon" aria-hidden="true">⚗️</div>
+        <h1 class="splash-title">SciCalcApp</h1>
+        <p class="splash-sub">For Engineers &amp; Scientists</p>
+        <div id="deviceready" class="blink">
+          <p class="event listening">Connecting to device…</p>
+          <p class="event received">Device is ready ✓</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────────────────────────────────
+         APP CONTAINER — revealed after deviceready
+         ───────────────────────────────────────────────────────── -->
+    <div id="app-container" class="hidden">
+      <header class="app-header">
+        <span class="header-icon" aria-hidden="true">⚗️</span>
+        <span class="header-title">SciCalcApp</span>
+        <span class="header-badge">Ch 2</span>
+      </header>
+
+      <main id="app-main">
+        <!-- ─────────────────────────────────────────────────
+                 CHAPTER 2 — Build Information Panel
+                 Surfaces everything you verify after running:
+                   cordova build android
+                   cordova run browser
+                 Each row maps to a config.xml entry or runtime value.
+                 ───────────────────────────────────────────────── -->
+        <div class="section-label">📦 Build Information</div>
+        <div class="info-panel">
+          <div class="info-row">
+            <span class="info-key">App ID</span>
+            <span class="info-val mono" id="info-app-id">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">App Name</span>
+            <span class="info-val" id="info-app-name">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">Version</span>
+            <span class="info-val mono" id="info-version">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">Platform</span>
+            <span class="info-val mono" id="info-platform">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">Cordova</span>
+            <span class="info-val mono" id="info-cordova">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">Screen</span>
+            <span class="info-val mono" id="info-screen">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">User Agent</span>
+            <span class="info-val ua-text" id="info-ua">—</span>
+          </div>
+        </div>
+
+        <!-- ─────────────────────────────────────────────────
+                 CHAPTER 2 — Self-Test Suite
+                 Automated checks that run on every startup.
+                 Replaces the manual "verify" checklist from Ch 2:
+                   ✓ UI renders correctly
+                   ✓ deviceready fired
+                   ✓ Cordova APIs accessible
+                   ✓ localStorage read/write works
+                   ✓ Basic arithmetic is accurate
+                 ───────────────────────────────────────────────── -->
+        <div class="section-label">🧪 Self-Test Results</div>
+        <div class="test-panel" id="test-results">
+          <p class="test-waiting">Running tests…</p>
+        </div>
+        <button class="action-btn" onclick="runTests()">↺ Re-run Tests</button>
+
+        <!-- ─────────────────────────────────────────────────
+                 CHAPTER 2 — On-Screen Console Log
+                 Essential when testing on a physical Android device
+                 where chrome://inspect may not be available.
+                 Every app.log() call appends an entry here.
+                 ───────────────────────────────────────────────── -->
+        <div class="section-label">🖥 Console Log</div>
+        <div class="console-panel" id="console-log"></div>
+        <button class="action-btn secondary" onclick="app.clearLog()">
+          Clear Log
+        </button>
+      </main>
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+  </body>
+</html>

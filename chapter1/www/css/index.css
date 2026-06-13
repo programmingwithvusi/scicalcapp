@@ -1,0 +1,263 @@
+/*
+ * ╔══════════════════════════════════════════════════════════╗
+ * ║  SciCalcApp — Chapter 1: Introduction                   ║
+ * ║  index.css — base styles, splash, shell, animations     ║
+ * ╚══════════════════════════════════════════════════════════╝
+ *
+ * Design direction: industrial-scientific — dark background,
+ * amber/gold accent, monospaced labels, clean grid layout.
+ * Evokes a precision instrument rather than a consumer app.
+ */
+
+/* ── Design tokens ──────────────────────────────────────────────────────── */
+:root {
+    --bg:           #0f1117;
+    --bg-card:      #1a1d27;
+    --bg-header:    #13151f;
+    --accent:       #f5a623;      /* amber */
+    --accent-dim:   #c47e0f;
+    --accent-glow:  rgba(245,166,35,0.15);
+    --text-primary: #e8eaf0;
+    --text-muted:   #7a7f96;
+    --text-code:    #a8d8a8;
+    --border:       rgba(255,255,255,0.08);
+    --radius:       10px;
+    --font-display: 'Courier New', 'Lucida Console', monospace;
+    --font-body:    'Trebuchet MS', 'Segoe UI', sans-serif;
+    --transition:   0.3s ease;
+}
+
+/* ── Reset & base ────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    overscroll-behavior: none;
+    height: 100%;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 14px;
+    height: 100%;
+    min-height: 100vh;
+    -webkit-text-size-adjust: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    /* Safe area insets for notched devices */
+    padding: env(safe-area-inset-top, 0)
+             env(safe-area-inset-right, 0)
+             env(safe-area-inset-bottom, 0)
+             env(safe-area-inset-left, 0);
+}
+
+/* ── Utility ─────────────────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* ── Splash screen ───────────────────────────────────────────────────────── */
+#splash-screen {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: opacity 0.4s ease;
+}
+
+#splash-screen.fade-out { opacity: 0; }
+
+.splash-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    animation: splash-rise 0.6s ease both;
+}
+
+@keyframes splash-rise {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.splash-icon {
+    font-size: 64px;
+    line-height: 1;
+    filter: drop-shadow(0 0 24px var(--accent));
+}
+
+.splash-title {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: normal;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.splash-sub {
+    color: var(--text-muted);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+}
+
+/* deviceready indicator --------------------------------------------------- */
+#deviceready {
+    margin-top: 24px;
+    text-align: center;
+}
+
+#deviceready .event {
+    display: none;
+    font-family: var(--font-display);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    padding: 6px 18px;
+    border-radius: 20px;
+}
+
+/* listening state (default) */
+#deviceready .event.listening {
+    display: block;
+    background: rgba(255,255,255,0.06);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+}
+
+/* received state — added by JS */
+#deviceready.ready .event.listening { display: none; }
+#deviceready.ready .event.received  {
+    display: block;
+    background: rgba(245,166,35,0.15);
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+}
+
+/* blink animation while listening */
+.blink .event.listening {
+    animation: blink-fade 2s ease-in-out infinite;
+}
+
+@keyframes blink-fade {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+}
+
+/* ── App container ───────────────────────────────────────────────────────── */
+#app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+#app-container.fade-in {
+    animation: fade-in 0.4s ease both;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ── App header ──────────────────────────────────────────────────────────── */
+.app-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-header);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 18px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.header-icon { font-size: 22px; }
+
+.header-title {
+    flex: 1;
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.header-badge {
+    font-family: var(--font-display);
+    font-size: 10px;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 6px;
+    letter-spacing: 0.05em;
+}
+
+/* ── Main content area ───────────────────────────────────────────────────── */
+#app-main {
+    flex: 1;
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* ── Welcome card (Chapter 1) ────────────────────────────────────────────── */
+.welcome-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    animation: card-appear 0.5s ease 0.1s both;
+}
+
+@keyframes card-appear {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.welcome-card h2 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--accent);
+    font-weight: normal;
+    letter-spacing: 0.06em;
+}
+
+.welcome-card p {
+    color: var(--text-primary);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.welcome-card strong {
+    color: var(--accent);
+    font-family: var(--font-display);
+}
+
+.chapter-note {
+    margin-top: 4px;
+    padding: 12px;
+    background: rgba(245,166,35,0.07);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.chapter-note em {
+    color: var(--accent);
+    font-style: normal;
+}

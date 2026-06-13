@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+  config.xml — SciCalcApp
+  Chapter 5: adds battery-status and network-information plugin declarations.
+-->
+<widget id="com.example.scicalcapp"
+        version="1.0.0"
+        xmlns="http://www.w3.org/ns/widgets"
+        xmlns:cdv="http://cordova.apache.org/ns/1.0">
+
+    <name>SciCalcApp</name>
+
+    <description>
+        A cross-platform scientific calculator and system monitor built
+        chapter-by-chapter following Building Cross-Platform Mobile and
+        Web Apps for Engineers and Scientists.
+    </description>
+
+    <author email="dev@example.com" href="https://example.com">
+        Levious
+    </author>
+
+    <content src="index.html" />
+
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+
+    <!-- Chapter 5: device monitoring plugins -->
+    <plugin name="cordova-plugin-battery-status"      spec="^3.0.0" />
+    <plugin name="cordova-plugin-network-information" spec="^3.0.0" />
+    <plugin name="cordova-plugin-device"              spec="^2.0.0" />
+
+</widget>
