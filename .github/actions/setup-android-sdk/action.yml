@@ -1,0 +1,23 @@
+name: 'Setup Android SDK (Docker)'
+description: 'Install Android SDK command-line tools, platforms and build-tools using a Docker container.'
+inputs:
+  sdk-root:
+    description: 'Directory to install Android SDK into'
+    required: false
+    default: '/github/workspace/android-sdk'
+  api-level:
+    description: 'Android API level to install'
+    required: false
+    default: '33'
+  build-tools:
+    description: 'Build-tools version to install'
+    required: false
+    default: '33.0.2'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.sdk-root }}
+    - ${{ inputs.api-level }}
+    - ${{ inputs.build-tools }}
