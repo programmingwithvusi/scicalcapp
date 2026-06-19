@@ -5,7 +5,8 @@
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "build":"cordova build browser"
   },
   "keywords": [
     "ecosystem:cordova"

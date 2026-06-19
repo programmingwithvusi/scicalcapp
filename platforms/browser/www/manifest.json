@@ -1,0 +1,17 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "MyFirstApp",
+  "short_name": "MyFirstApp",
+  "version": "com.example.myfirstapp",
+  "description": "A cross-platform scientific calculator and system monitor built\n        chapter-by-chapter following Building Cross-Platform Mobile and\n        Web Apps for Engineers and Scientists.",
+  "author": "Levious",
+  "icons": [
+    {
+      "src": "www/img/icon.svg",
+      "type": "image/png",
+      "sizes": "undefinedxundefined"
+    }
+  ],
+  "start_url": "index.html"
+}
