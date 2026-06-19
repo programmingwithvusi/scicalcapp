@@ -9,7 +9,7 @@ platforms/android
 platforms/browser/cordova
 platforms/browser/browser.json
 platforms/browser/config.xml
-plugins/
+
 hooks/
 build/
 platform_www/
