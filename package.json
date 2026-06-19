@@ -15,27 +15,26 @@
   "author": "Apache Cordova Team",
   "license": "Apache-2.0",
   "devDependencies": {
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "babel-jest": "^29.7.0",
     "@babel/core": "^7.25.0",
     "@babel/preset-env": "^7.25.0",
+    "babel-jest": "^29.7.0",
     "cordova-android": "^15.0.0",
     "cordova-browser": "^7.0.0",
-    "cordova-plugin-battery-status": "^3.0.0",
+    "cordova-plugin-battery-status": "^2.0.3",
+    "cordova-plugin-device": "^2.0.0",
     "cordova-plugin-network-information": "^3.0.0",
-    "cordova-plugin-device": "^2.0.0"
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
   },
   "cordova": {
     "platforms": [
-      "android",
-      "browser"
+      "browser",
+      "android"
     ],
     "plugins": {
       "cordova-plugin-battery-status": {},
       "cordova-plugin-network-information": {},
       "cordova-plugin-device": {}
     }
-  },
-  "dependencies": {}
+  }
 }
