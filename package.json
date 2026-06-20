@@ -1,13 +1,16 @@
 {
-  "name": "com.example.myfirstapp",
-  "displayName": "MyFirstApp",
+  "name": "com.sample.scicalcapp",
+  "displayName": "scicalcapp",
   "version": "1.0.0",
   "description": "A sample Apache Cordova application that responds to the deviceready event.",
   "main": "index.js",
   "scripts": {
-  "test": "jest --runInBand",
-  "browser": "cordova build browser",
-  "netlify-build": "cordova build browser"
+    "test": "jest --runInBand",
+    "build:browser": "cordova build browser",
+    "build:android": "cordova build android",
+    "build:device": "cordova build android -device",
+    "netlify-build": "cordova build browser",
+    "ci": "npx cordova platform add browser --no-save & npx cordova build browser"
   },
   "keywords": [
     "ecosystem:cordova"
@@ -17,12 +20,12 @@
   "devDependencies": {
     "@babel/core": "^7.25.0",
     "@babel/preset-env": "^7.25.0",
-    "babel-jest": "^29.7.0",
+    "babel-jest": "^25.0.0",
     "cordova-browser": "^7.0.0",
     "cordova-plugin-battery-status": "^2.0.3",
     "cordova-plugin-device": "^2.0.0",
     "cordova-plugin-network-information": "^3.0.0",
-    "jest": "^29.7.0",
+    "jest": "^25.0.0",
     "jest-environment-jsdom": "^29.7.0"
   },
   "cordova": {
@@ -34,5 +37,10 @@
       "cordova-plugin-network-information": {},
       "cordova-plugin-device": {}
     }
+  },
+  "dependencies": {
+    "netlify-cli": "^24.0.1",
+    "to": "^0.2.9",
+    "update": "^0.4.2"
   }
 }
