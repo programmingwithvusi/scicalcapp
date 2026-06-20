@@ -8,7 +8,6 @@ yarn-error.log*
 toberemoved/
 hooks/
 build/
-platform_www/
 res/
 *.apk
 *.ap_*
