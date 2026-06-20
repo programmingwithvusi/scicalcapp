@@ -7,7 +7,6 @@
   "scripts": {
     "test": "jest --runInBand",
     "build:browser": "cordova build browser",
-    "build":"npm ci && npx cordova platform add browser && npx cordova build browser",
     "build:android": "cordova build android",
     "build:device": "cordova build android -device",
     "netlify-build": "cordova build browser"
