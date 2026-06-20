@@ -1,0 +1,38 @@
+name: Netlify Deploy (Browser)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies (if any)
+        run: |
+          if [ -f package.json ]; then npm ci; fi
+
+      - name: Build browser
+        run: |
+          npx cordova platform add browser --no-save || true
+          npx cordova build browser --no-telemetry
+
+      - name: Verify www folder
+        run: |
+          if [ ! -d "www" ]; then echo "www/ folder missing"; ls -la; exit 1; fi
+
+      - name: Deploy to Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          if [ -z "${{ secrets.NETLIFY_AUTH_TOKEN }}" ] || [ -z "${{ secrets.NETLIFY_SITE_ID }}" ]; then echo "Missing Netlify secrets"; exit 1; fi
+          npm install -g netlify-cli@9
+          netlify deploy --dir=www --prod --site ${{ secrets.NETLIFY_SITE_ID }}
