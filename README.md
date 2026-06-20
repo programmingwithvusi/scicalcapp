@@ -34,7 +34,7 @@ Serve `www/` locally for a quick smoke test:
 
 ```powershell
 npx http-server www -p 8000
-# open http://localhost:8080
+# open http://localhost:8000
 ```
 
 ---

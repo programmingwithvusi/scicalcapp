@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.example.myfirstapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>MyFirstApp</name>
+<widget id="com.sample.scicalcapp" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>SciCalcApp</name>
     <description>
         A cross-platform scientific calculator and system monitor built
         chapter-by-chapter following Building Cross-Platform Mobile and

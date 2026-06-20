@@ -20,6 +20,7 @@
     "@babel/core": "^7.25.0",
     "@babel/preset-env": "^7.25.0",
     "babel-jest": "^25.0.0",
+    "cordova-android": "^15.0.0",
     "cordova-browser": "^7.0.0",
     "cordova-plugin-battery-status": "^2.0.3",
     "cordova-plugin-device": "^2.0.0",
@@ -29,7 +30,8 @@
   },
   "cordova": {
     "platforms": [
-      "browser"
+      "browser",
+      "android"
     ],
     "plugins": {
       "cordova-plugin-battery-status": {},
@@ -39,8 +41,9 @@
   },
   "dependencies": {
     "@netlify/functions": "^5.3.0",
-    "netlify-cli": "^26.1.0",
+    "ionic": "^4.1.2",
+    "netlify-cli": "^24.0.1",
     "to": "^0.2.9",
-    "update": "^0.7.4"
+    "update": "^0.4.2"
   }
 }

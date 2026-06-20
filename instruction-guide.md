@@ -38,3 +38,5 @@ cordova plugin add cordova-plugin-device
 cordova platform remove android
 cordova platform add android
 cordova run android
+
+npm install -g cordova-res
