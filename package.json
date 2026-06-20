@@ -9,8 +9,7 @@
     "build:browser": "cordova build browser",
     "build:android": "cordova build android",
     "build:device": "cordova build android -device",
-    "netlify-build": "cordova build browser",
-    "ci": "npx cordova platform add browser --no-save & npx cordova build browser"
+    "netlify-build": "cordova build browser"
   },
   "keywords": [
     "ecosystem:cordova"
@@ -39,8 +38,8 @@
     }
   },
   "dependencies": {
-    "netlify-cli": "^24.0.1",
+    "netlify-cli": "^26.1.0",
     "to": "^0.2.9",
-    "update": "^0.4.2"
+    "update": "^0.7.4"
   }
 }
