@@ -8,13 +8,13 @@
   },
   "installed_plugins": {
     "cordova-plugin-battery-status": {
-      "PACKAGE_NAME": "com.example.myfirstapp"
+      "PACKAGE_NAME": "com.sample.scicalcapp"
     },
     "cordova-plugin-network-information": {
-      "PACKAGE_NAME": "com.example.myfirstapp"
+      "PACKAGE_NAME": "com.sample.scicalcapp"
     },
     "cordova-plugin-device": {
-      "PACKAGE_NAME": "com.example.myfirstapp"
+      "PACKAGE_NAME": "com.sample.scicalcapp"
     }
   },
   "dependent_plugins": {}
