@@ -3,6 +3,8 @@ name: Netlify Deploy (Browser)
 on:
   push:
     branches: [ main ]
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   build-and-deploy:
@@ -20,7 +22,7 @@ jobs:
         run: |
           if [ -f package.json ]; then npm ci; fi
       - name: Install Cordova CLI
-        run: npm install -g cordova@11
+        run: npm install -g cordova
       - name: Build browser
         run: |
           npx cordova platform add browser --no-save || true
@@ -31,10 +33,43 @@ jobs:
         run: |
           if [ ! -d "www" ]; then echo "www/ folder missing"; ls -la; exit 1; fi
 
-      - name: Deploy to Netlify
+      - name: Deploy to Netlify (preview for PR / prod for main)
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: |
           if [ -z "${{ secrets.NETLIFY_AUTH_TOKEN }}" ] || [ -z "${{ secrets.NETLIFY_SITE_ID }}" ]; then echo "Missing Netlify secrets"; exit 1; fi
           npm install -g netlify-cli@9
-          netlify deploy --dir=www --prod --site ${{ secrets.NETLIFY_SITE_ID }}
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Preview deploy for PR"
+            netlify deploy --dir=www --json --site ${{ secrets.NETLIFY_SITE_ID }} > netlify-preview.json || true
+            cat netlify-preview.json
+          else
+            echo "Production deploy for main"
+            netlify deploy --dir=www --prod --site ${{ secrets.NETLIFY_SITE_ID }}
+          fi
+
+      - name: Upload preview artifact (if present)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: netlify-preview-json
+          path: netlify-preview.json
+
+      - name: Comment PR with preview URL
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            if (!fs.existsSync('netlify-preview.json')) { core.info('No preview json'); return; }
+            const data = JSON.parse(fs.readFileSync('netlify-preview.json','utf8'));
+            const url = data && data.deploy_url ? data.deploy_url : (data && data.deploy && data.deploy.ssl_url ? data.deploy.ssl_url : null);
+            if (!url) { core.info('No deploy url found in netlify-preview.json'); return; }
+            const pr = context.payload.pull_request.number;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr,
+              body: `Netlify preview: ${url}`
+            });
